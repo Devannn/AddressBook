@@ -41,8 +41,8 @@
                     <h4 class="modal-title" id="modalHeading"></h4>
                 </div>
                 <div class="modal-body">
-                    <form id="addressForm" name="addressForm" class="form-horizonal">
-                        <nput type="hidden" name="address_id" id="address_id">
+                <form id="addressForm" name="addressForm" class="form-horizonal">
+                    <input type="hidden" name="address_id" id="address_id">
                         <div class="form-group">
                             First Name: <br>
                             <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter first name" value="" required>
@@ -76,6 +76,52 @@
                             <input type="text" class="form-control" id="email" name="email" placeholder="Enter email" value="" required>
                         </div>
                         <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="ajaxModel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalHeading"></h4>
+                </div>
+                <div class="modal-body">
+                <form id="addressForm" name="addressForm" class="form-horizonal">
+                    <input type="hidden" name="address_id" id="address_id">
+                        <div class="form-group">
+                            First Name: <br>
+                            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter first name" value="" required>
+                        </div>
+                        <div class="form-group">
+                            Addition: <br>
+                            <input type="text" class="form-control" id="addition" name="addition" placeholder="Enter addition" value="">
+                        </div>
+                        <div class="form-group">
+                            Last Name: <br>
+                            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter last name" value="" required>
+                        </div>
+                        <div class="form-group">
+                            Address: <br>
+                            <input type="text" class="form-control" id="address" name="address" placeholder="Enter address" value="" required>
+                        </div>
+                        <div class="form-group">
+                            Postal Code: <br>
+                            <input type="text" class="form-control" id="postalcode" name="postalcode" placeholder="Enter postal code" value="" required>
+                        </div>
+                        <div class="form-group">
+                            City Name: <br>
+                            <input type="text" class="form-control" id="cityname" name="cityname" placeholder="Enter city name" value="" required>
+                        </div>
+                        <div class="form-group">
+                            Phonenumber: <br>
+                            <input type="text" class="form-control" id="phonenumber" name="phonenumber" placeholder="Enter phonenumber" value="" required>
+                        </div>
+                        <div class="form-group">
+                            Email: <br>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Enter email" value="" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="editBtn" value="edit">Save</button>
                     </form>
                 </div>
             </div>
@@ -117,6 +163,7 @@
             $("#modalHeading").html("Add Address");
             $('#ajaxModel').modal('show');
         });
+
         $("#saveBtn").click(function(e){
             e.preventDefault();
             $(this).html('Save');
@@ -138,6 +185,29 @@
                 }
             });
         });
+
+        $("#editBtn").click(function(e){
+            e.preventDefault();
+            $(this).html('Edit');
+            
+            $.ajax({
+                data:$("#addressForm").serialize(),
+                url:"{{route('addresses.store')}}",
+                type:"POST",
+                dataType:'json',
+                success:function(data){
+                    console.log('Success: ', data);
+                    $("#addressForm").trigger("reset");
+                    $('#ajaxModel').modal('hide');
+                    table.draw();
+                },
+                error:function(data){
+                    console.log('Error: ', data);
+                    $("#editBtn").html('Edit');
+                }
+            });
+        });
+
         $('body').on('click', '.deleteAddress', function(){
             var address_id = $(this).data("id");
             confirm("Are you sure you want to delete?");
@@ -152,11 +222,21 @@
                 }
             });
         });
+
         $('body').on('click', '.editAddress', function(){
-            var address_id = $(this).data("id");
-            $.get("[[route('addresses.index')}}"+"/"+address_id+"/edit", function(data){
-                $("modelHeading").html("Edit Address");
+            var address_id = $(this).data('id');
+            $.get("{{route('addresses.index')}}"+"/"+address_id+"/edit", function(data){
+                $("modalHeading").html("Edit Address");
                 $('#ajaxModel').modal('show');
+                $('#address_id').val(data.id);
+                $('#firstname').val(data.firstname);
+                $('#addition').val(data.addition);
+                $('#lastname').val(data.lastname);
+                $('#address').val(data.address);
+                $('#postalcode').val(data.postalcode);
+                $('#cityname').val(data.cityname);
+                $('#phonenumber').val(data.phonenumber);
+                $('#email').val(data.email);
             })
         });
     });

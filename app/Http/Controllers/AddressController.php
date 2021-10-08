@@ -87,7 +87,8 @@ class AddressController extends Controller
      */
     public function edit($id)
     {
-        //
+        $addresses = Address::find($id);
+        return response()->json($addresses);
     }
 
     /**
