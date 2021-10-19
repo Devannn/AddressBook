@@ -14,6 +14,7 @@
     <div class="container">
         <h1>Addresses</h1>
         <a class="btn btn-success" href="javascript:void(0)" id="createNewAddress" style="float:right">Add</a>
+        <!-- This is the table used to show the addresses that are retrieves from the database. -->
         <table class="table table-bordered data-table">
             <thead>
                 <tr>
@@ -34,6 +35,7 @@
             </tbody>
         </table>
     </div>
+    <!-- This is the whole division used when the enduser wants to add a new address to the address book. -->
     <div class="modal fade" id="ajaxModel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -68,7 +70,7 @@
                             <input type="text" class="form-control" id="cityname" name="cityname" placeholder="Enter city name" value="" required>
                         </div>
                         <div class="form-group">
-                            Phonenumber: <br>
+                            Phone Number: <br>
                             <input type="text" class="form-control" id="phonenumber" name="phonenumber" placeholder="Enter phonenumber" value="" required>
                         </div>
                         <div class="form-group">
@@ -76,52 +78,6 @@
                             <input type="text" class="form-control" id="email" name="email" placeholder="Enter email" value="" required>
                         </div>
                         <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="ajaxModel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="modalHeading"></h4>
-                </div>
-                <div class="modal-body">
-                <form id="addressForm" name="addressForm" class="form-horizonal">
-                    <input type="hidden" name="address_id" id="address_id">
-                        <div class="form-group">
-                            First Name: <br>
-                            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter first name" value="" required>
-                        </div>
-                        <div class="form-group">
-                            Addition: <br>
-                            <input type="text" class="form-control" id="addition" name="addition" placeholder="Enter addition" value="">
-                        </div>
-                        <div class="form-group">
-                            Last Name: <br>
-                            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter last name" value="" required>
-                        </div>
-                        <div class="form-group">
-                            Address: <br>
-                            <input type="text" class="form-control" id="address" name="address" placeholder="Enter address" value="" required>
-                        </div>
-                        <div class="form-group">
-                            Postal Code: <br>
-                            <input type="text" class="form-control" id="postalcode" name="postalcode" placeholder="Enter postal code" value="" required>
-                        </div>
-                        <div class="form-group">
-                            City Name: <br>
-                            <input type="text" class="form-control" id="cityname" name="cityname" placeholder="Enter city name" value="" required>
-                        </div>
-                        <div class="form-group">
-                            Phonenumber: <br>
-                            <input type="text" class="form-control" id="phonenumber" name="phonenumber" placeholder="Enter phonenumber" value="" required>
-                        </div>
-                        <div class="form-group">
-                            Email: <br>
-                            <input type="text" class="form-control" id="email" name="email" placeholder="Enter email" value="" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary" id="editBtn" value="edit">Save</button>
                     </form>
                 </div>
             </div>
@@ -164,6 +120,7 @@
             $('#ajaxModel').modal('show');
         });
 
+        // When clicking the save button it will add a new row to the table with the information written in the textboxes.
         $("#saveBtn").click(function(e){
             e.preventDefault();
             $(this).html('Save');
@@ -186,28 +143,7 @@
             });
         });
 
-        $("#editBtn").click(function(e){
-            e.preventDefault();
-            $(this).html('Edit');
-            
-            $.ajax({
-                data:$("#addressForm").serialize(),
-                url:"{{route('addresses.store')}}",
-                type:"POST",
-                dataType:'json',
-                success:function(data){
-                    console.log('Success: ', data);
-                    $("#addressForm").trigger("reset");
-                    $('#ajaxModel').modal('hide');
-                    table.draw();
-                },
-                error:function(data){
-                    console.log('Error: ', data);
-                    $("#editBtn").html('Edit');
-                }
-            });
-        });
-
+        // Deletes the values from the database its just an easy type:delete with the address_id used from the table.
         $('body').on('click', '.deleteAddress', function(){
             var address_id = $(this).data("id");
             confirm("Are you sure you want to delete?");
@@ -223,6 +159,7 @@
             });
         });
 
+        // Edits the values and changes them in de database using a route.
         $('body').on('click', '.editAddress', function(){
             var address_id = $(this).data('id');
             $.get("{{route('addresses.index')}}"+"/"+address_id+"/edit", function(data){

@@ -54,7 +54,8 @@ class AddressController extends Controller
     public function store(Request $request)
     {
         Address::updateOrCreate(
-            ['id'=>$request->address_id,
+            ['id'=>$request->address_id],
+            [
             'firstname'=> $request->firstname,
             'addition'=> $request->addition,
             'lastname'=> $request->lastname,
